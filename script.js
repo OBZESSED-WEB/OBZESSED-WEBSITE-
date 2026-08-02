@@ -1,9 +1,9 @@
 const PRODUCTS=[
-{id:1,name:"Founders Varsity Jacket",category:"jacket",price:1250,color:"Burgundy / Beige",img:"assets/founders-jacket.svg",desc:"Our signature made-to-order varsity jacket."},
-{id:2,name:"Denim Varsity Jacket",category:"jacket",price:1250,color:"Vintage Blue",img:"assets/denim-jacket.svg",desc:"A classic denim take on the varsity silhouette."},
-{id:3,name:"Olive Green Varsity Jacket",category:"jacket",price:1250,color:"Olive / Beige",img:"assets/olive-jacket.svg",desc:"A statement varsity jacket in olive."},
-{id:4,name:"OBSESSED Signature Hoodie",category:"hoodie",price:899,color:"Beige",img:"assets/signature-hoodie.svg",desc:"The everyday OBSESSED essential."},
-{id:5,name:"Classic Zip Hoodie",category:"hoodie",price:899,color:"Burgundy",img:"assets/classic-hoodie.svg",desc:"A clean zip hoodie with OBSESSED attitude."}
+{id:1,name:"Founders Varsity Jacket",category:"jacket",price:1250,color:"Burgundy / Beige",img:"founders-jacket.svg",desc:"Our signature made-to-order varsity jacket."},
+{id:2,name:"Denim Varsity Jacket",category:"jacket",price:1250,color:"Vintage Blue",img:"denim-jacket.svg",desc:"A classic denim take on the varsity silhouette."},
+{id:3,name:"Olive Green Varsity Jacket",category:"jacket",price:1250,color:"Olive / Beige",img:"olive-jacket.svg",desc:"A statement varsity jacket in olive."},
+{id:4,name:"OBSESSED Signature Hoodie",category:"hoodie",price:899,color:"Beige",img:"signature-hoodie.svg",desc:"The everyday OBSESSED essential."},
+{id:5,name:"Classic Zip Hoodie",category:"hoodie",price:899,color:"Burgundy",img:"classic-hoodie.svg",desc:"A clean zip hoodie with OBSESSED attitude."}
 ];
 let cart=JSON.parse(localStorage.getItem("obsessedCart")||"[]");
 
