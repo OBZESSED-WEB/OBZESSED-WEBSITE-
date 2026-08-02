@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800">
+<rect width="800" height="800" rx="24" fill="#eee4d5"/>
+<ellipse cx="400" cy="700" rx="240" ry="25" fill="#d8c9b5"/>
+<path d="M285 235 L330 165 Q400 125 470 165 L515 235 L600 290 L535 400 L490 365 L505 640 Q400 685 295 640 L310 365 L265 400 L200 290 Z" fill="#e5d7c2" stroke="#2d2220" stroke-width="8"/>
+<path d="M330 165 Q400 225 470 165" fill="none" stroke="#5b0d16" stroke-width="22"/>
+<path d="M310 365 L295 640 M490 365 L505 640" stroke="#d6bca5" stroke-width="7"/>
+<text x="400" y="410" text-anchor="middle" font-family="Georgia,serif" font-size="45" font-weight="700" fill="#5b0d16">OBSESSED</text>
+<text x="400" y="452" text-anchor="middle" font-family="Arial,sans-serif" font-size="17" letter-spacing="3" fill="#5b0d16">CLOTHING MADE FOR YOUTH</text>
+<circle cx="400" cy="305" r="33" fill="none" stroke="#5b0d16" stroke-width="5"/>
+<text x="400" y="317" text-anchor="middle" font-family="Georgia,serif" font-size="30" fill="#5b0d16">OZ</text>
+<text x="400" y="748" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" letter-spacing="3" fill="#5b0d16">OBSESSED SIGNATURE HOODIE</text>
+</svg>

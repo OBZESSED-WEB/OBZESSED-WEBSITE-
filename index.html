@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OBSESSED by O&Z — Unapologetically Iconic</title>
+<meta name="description" content="OBSESSED by O&Z — clothing made for youth, by youth. South African streetwear and custom varsity jackets.">
+<link rel="icon" href="assets/founders-jacket.svg">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="announcement">FREE DELIVERY ACROSS SOUTH AFRICA · MADE TO ORDER</div>
+
+<header class="site-header">
+  <a class="brand" href="#home">OBSESSED<span>by O&Z</span></a>
+  <nav>
+    <a href="#home">HOME</a><a href="#shop">SHOP</a><a href="#about">ABOUT</a><a href="#story">OUR STORY</a><a href="#contact">CONTACT</a>
+  </nav>
+  <div class="header-actions">
+    <button aria-label="Search" onclick="focusSearch()">⌕</button>
+    <button aria-label="Account" onclick="showToast('Account area coming next — your shop is ready to launch.')">♙</button>
+    <button aria-label="Cart" class="cart-btn" onclick="openCart()">♧ <b id="cartCount">0</b></button>
+  </div>
+</header>
+
+<main id="home">
+<section class="hero">
+  <div class="hero-copy">
+    <div class="monogram">OZ</div>
+    <h1>OBSESSED</h1>
+    <p class="tagline">UNAPOLOGETICALLY ICONIC</p>
+    <p>Clothing made for youth, by youth.</p>
+    <div class="hero-buttons"><a class="btn" href="#shop">SHOP NOW</a><a class="btn ghost" href="#story">OUR STORY</a></div>
+  </div>
+  <div class="hero-art">
+    <div class="hero-jacket back">44</div>
+    <div class="hero-jacket front">OZ</div>
+  </div>
+</section>
+
+<section class="promise">
+  <div><strong>✧ MADE-TO-ORDER</strong><span>Exclusively for you</span></div>
+  <div><strong>⌁ PREMIUM QUALITY</strong><span>Built to last</span></div>
+  <div><strong>♧ CUSTOMISABLE</strong><span>Your story. Your jacket.</span></div>
+  <div><strong>⌖ SOUTH AFRICA</strong><span>Proudly local</span></div>
+</section>
+
+<section class="section" id="shop">
+  <div class="section-head"><div><p class="eyebrow">THE COLLECTION</p><h2>Shop OBSESSED</h2></div><button class="text-btn" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">View all products →</button></div>
+  <div class="collection-grid">
+    <a href="#products" class="collection-card large"><img src="assets/founders-jacket.svg"><div><h3>MATRIC JACKETS</h3><span>Made to represent your moment →</span></div></a>
+    <a href="#products" class="collection-card large"><img src="assets/signature-hoodie.svg"><div><h3>HOODIES</h3><span>Everyday essentials with attitude →</span></div></a>
+  </div>
+</section>
+
+<section class="section products-section" id="products">
+  <div class="section-head"><div><p class="eyebrow">SHOP</p><h2>Current drops</h2></div><div class="filters"><button class="filter active" data-filter="all">All</button><button class="filter" data-filter="jacket">Jackets</button><button class="filter" data-filter="hoodie">Hoodies</button></div></div>
+  <div class="product-grid" id="productGrid"></div>
+</section>
+
+<section class="story" id="story">
+  <div class="story-copy"><p class="eyebrow">OUR STORY</p><h2>Built from ambition. Worn with purpose.</h2>
+  <p>OBSESSED started with an unexpected “yes”. What began as two friends trying to create clothing we couldn’t find has grown into a brand built on ambition, quality, and individuality.</p>
+  <p>Every piece is designed with the next generation in mind.</p><a class="btn" href="#about">READ OUR STORY →</a></div>
+  <img src="assets/founders-jacket.svg" alt="OBSESSED varsity jacket">
+</section>
+
+<section class="about section" id="about">
+  <p class="eyebrow">THE OBSESSION</p><h2>Clothing made for youth, by youth.</h2>
+  <div class="about-grid"><div><span class="big-num">01</span><h3>IDENTITY</h3><p>Pieces that let you show up as yourself — loudly, confidently and unapologetically.</p></div><div><span class="big-num">02</span><h3>QUALITY</h3><p>Thoughtful materials, considered details and made-to-order pieces designed to last.</p></div><div><span class="big-num">03</span><h3>COMMUNITY</h3><p>A South African youth brand built around creativity, ambition and belonging.</p></div></div>
+</section>
+
+<section class="newsletter"><div><p class="eyebrow">JOIN THE OBSESSION</p><h2>Be the first to know.</h2><p>New drops, events and exclusive offers.</p></div><form onsubmit="subscribe(event)"><input id="email" type="email" placeholder="Enter your email" required><button class="btn">SUBSCRIBE</button></form></section>
+</main>
+
+<footer id="contact">
+  <div class="footer-brand"><a class="brand" href="#home">OBSESSED<span>by O&Z</span></a><p>UNAPOLOGETICALLY ICONIC</p><small>Clothing Made for Youth, by Youth.</small></div>
+  <div><h4>SHOP</h4><a href="#products">All Products</a><a href="#products">Matric Jackets</a><a href="#products">Hoodies</a></div>
+  <div><h4>HELP</h4><a href="#">FAQ</a><a href="#">Size Guide</a><a href="#">Shipping</a><a href="#">Returns</a></div>
+  <div><h4>COMPANY</h4><a href="#">Instagram @__obsessed__</a><a href="tel:+27813537105">081 353 7105</a><a href="mailto:info@obzessed.co.za">info@obzessed.co.za</a></div>
+  <div class="copyright">© 2026 OBSESSED. All Rights Reserved. <span>Privacy Policy · Terms & Conditions · Refund Policy</span></div>
+</footer>
+
+<div class="overlay" id="overlay" onclick="closeCart()"></div>
+<aside class="cart" id="cart">
+  <div class="cart-head"><h2>Your Cart</h2><button onclick="closeCart()">×</button></div>
+  <div id="cartItems"></div>
+  <div class="cart-total"><span>Total</span><strong id="cartTotal">R0</strong></div>
+  <button class="btn full" onclick="goCheckout()">PROCEED TO CHECKOUT</button>
+  <p class="secure">🔒 Secure checkout · Free SA delivery</p>
+</aside>
+
+<div class="checkout-modal" id="checkout">
+  <div class="checkout-card">
+    <button class="modal-close" onclick="closeCheckout()">×</button>
+    <p class="eyebrow">CHECKOUT</p><h2>Complete your order</h2>
+    <form onsubmit="placeOrder(event)">
+      <label>Email<input type="email" required placeholder="you@email.com"></label>
+      <label>Full name<input required placeholder="Your name"></label>
+      <label>Phone<input required placeholder="081 000 0000"></label>
+      <label>Delivery address<textarea required placeholder="Street, suburb, city, province, postal code"></textarea></label>
+      <div class="order-summary"><span>Order total</span><strong id="checkoutTotal">R0</strong></div>
+      <button class="btn full">PLACE ORDER</button>
+    </form>
+    <small>Demo checkout: connect PayFast/Paystack/Stripe before taking live payments.</small>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<script src="script.js"></script>
+</body>
+</html>
