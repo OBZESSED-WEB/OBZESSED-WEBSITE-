@@ -339,18 +339,25 @@
         EMAIL
         <input
           id="loginEmail"
+          name="email"
           type="email"
+          autocomplete="email"
           required
+          
+          
+          
           style="width:100%;box-sizing:border-box;margin-top:7px;padding:12px;"
         >
       </label>
 
       <label style="display:block;margin-top:15px;">
         PASSWORD
-        <input
-          id="loginPassword"
-          type="password"
-          required
+        <input 
+           id="loginPassword"
+           name="password"
+           type="password"
+           autocomplete="current-password"
+           required
           style="width:100%;box-sizing:border-box;margin-top:7px;padding:12px;"
         >
       </label>
@@ -915,43 +922,56 @@ async function startAdmin(){
 
 
 /* LOGIN */
+const loginForm = document.getElementById("loginForm");
 
-document.getElementById("loginForm").addEventListener("submit",async function(e){
+loginForm.addEventListener("submit", async function(e) {
 
   e.preventDefault();
 
-  const email=document.getElementById("loginEmail").value.trim();
-  const password=document.getElementById("loginPassword").value;
-  const errorBox=document.getElementById("loginError");
+  const emailInput = document.getElementById("loginEmail");
+  const passwordInput = document.getElementById("loginPassword");
+  const errorBox = document.getElementById("loginError");
 
-  errorBox.textContent="Logging in...";
+  const email = emailInput.value.trim();
+  const password = passwordInput.value;
 
-  try{
+  errorBox.textContent = "";
 
-    const {data,error}=await supabaseClient.auth.signInWithPassword({
-      email:email,
-      password:password
-    });
+  if (!email || !password) {
+    errorBox.textContent = "Please enter your email and password.";
+    return;
+  }
 
-    if(error) throw error;
+  errorBox.textContent = "Logging in...";
 
-    currentUser=data.user;
+  try {
 
-    document.getElementById("loginScreen").style.display="none";
+    const { data, error } =
+      await supabaseClient.auth.signInWithPassword({
+        email: email,
+        password: password
+      });
 
-    errorBox.textContent="";
+    if (error) {
+      throw error;
+    }
+
+    currentUser = data.user;
+
+    document.getElementById("loginScreen").style.display = "none";
+
+    errorBox.textContent = "";
 
     await loadAdminProducts();
 
-  }catch(error){
+  } catch (error) {
 
-    console.error(error);
+    console.error("LOGIN ERROR:", error);
 
-    errorBox.textContent=error.message;
+    errorBox.textContent = error.message || "Login failed.";
 
   }
 
 });
-
 
 startAdmin();
