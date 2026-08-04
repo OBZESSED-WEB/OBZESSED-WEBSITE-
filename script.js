@@ -37,6 +37,7 @@ function showToast(t){const x=document.getElementById("toast");x.textContent=t;x
 function focusSearch(){const q=prompt("Search OBSESSED products:");if(q)showToast("Search is ready for the next build phase.");}
 document.querySelectorAll(".filter").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll(".filter").forEach(x=>x.classList.remove("active"));b.classList.add("active");renderProducts(b.dataset.filter);}));
 renderProducts();saveCart();
+
 // SUPABASE CONNECTION
 const SUPABASE_URL = "https://wluyakaqrvvzqvfxnmps.supabase.co";
 const SUPABASE_KEY = "sb_publishable_O5kw4jqiQE7RAegQnayg2g_Zu6OpoSS";
