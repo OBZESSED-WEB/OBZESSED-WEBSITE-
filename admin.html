@@ -307,6 +307,73 @@
 <body>
 
 <div class="admin-page">
+  <div id="loginScreen" style="
+  position:fixed;
+  inset:0;
+  background:var(--paper);
+  z-index:10000;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:25px;
+">
+
+  <div style="
+    width:min(420px,100%);
+    border:1px solid var(--line);
+    padding:40px;
+    background:#f0e5d5;
+  ">
+
+    <p class="eyebrow">OBZESSION CONTROL</p>
+
+    <h1 style="
+      font-family:'Cormorant Garamond',serif;
+      font-size:42px;
+      margin:0 0 25px;
+    ">Admin Login</h1>
+
+    <form id="loginForm">
+
+      <label>
+        EMAIL
+        <input
+          id="loginEmail"
+          type="email"
+          required
+          style="width:100%;box-sizing:border-box;margin-top:7px;padding:12px;"
+        >
+      </label>
+
+      <label style="display:block;margin-top:15px;">
+        PASSWORD
+        <input
+          id="loginPassword"
+          type="password"
+          required
+          style="width:100%;box-sizing:border-box;margin-top:7px;padding:12px;"
+        >
+      </label>
+
+      <button
+        type="submit"
+        class="btn"
+        style="width:100%;margin-top:20px;"
+      >
+        LOGIN
+      </button>
+
+      <p id="loginError" style="
+        color:#8b0000;
+        font-size:11px;
+        margin-top:15px;
+      "></p>
+
+    </form>
+
+  </div>
+
+</div>
 
 <header class="admin-header">
 
@@ -472,6 +539,7 @@
 
 let supabaseClient;
 let products=[];
+let currentUser=null;
 
 
 /* CONNECT TO SUPABASE */
@@ -805,27 +873,85 @@ function escapeHTML(value){
 
 /* START */
 
-try{
+/* START */
 
-  connectSupabase();
+async function startAdmin(){
 
-  loadAdminProducts();
+  try{
 
-}catch(error){
+    connectSupabase();
 
-  console.error(error);
+    const {data:{session}} = await supabaseClient.auth.getSession();
 
-  document.getElementById("adminProducts").innerHTML=`
-    <div class="admin-empty">
-      <strong>Supabase connection failed.</strong>
-      <br><br>
-      ${error.message}
-    </div>
-  `;
+    if(session){
+
+      currentUser=session.user;
+
+      document.getElementById("loginScreen").style.display="none";
+
+      await loadAdminProducts();
+
+    }else{
+
+      document.getElementById("loginScreen").style.display="flex";
+
+    }
+
+  }catch(error){
+
+    console.error(error);
+
+    document.getElementById("adminProducts").innerHTML=`
+      <div class="admin-empty">
+        <strong>Supabase connection failed.</strong>
+        <br><br>
+        ${escapeHTML(error.message)}
+      </div>
+    `;
+
+  }
 
 }
 
-</script>
 
-</body>
-</html>
+/* LOGIN */
+
+document.getElementById("loginForm").addEventListener("submit",async function(e){
+
+  e.preventDefault();
+
+  const email=document.getElementById("loginEmail").value.trim();
+  const password=document.getElementById("loginPassword").value;
+  const errorBox=document.getElementById("loginError");
+
+  errorBox.textContent="Logging in...";
+
+  try{
+
+    const {data,error}=await supabaseClient.auth.signInWithPassword({
+      email:email,
+      password:password
+    });
+
+    if(error) throw error;
+
+    currentUser=data.user;
+
+    document.getElementById("loginScreen").style.display="none";
+
+    errorBox.textContent="";
+
+    await loadAdminProducts();
+
+  }catch(error){
+
+    console.error(error);
+
+    errorBox.textContent=error.message;
+
+  }
+
+});
+
+
+startAdmin();
