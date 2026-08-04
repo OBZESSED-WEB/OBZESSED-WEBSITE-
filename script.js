@@ -37,3 +37,50 @@ function showToast(t){const x=document.getElementById("toast");x.textContent=t;x
 function focusSearch(){const q=prompt("Search OBSESSED products:");if(q)showToast("Search is ready for the next build phase.");}
 document.querySelectorAll(".filter").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll(".filter").forEach(x=>x.classList.remove("active"));b.classList.add("active");renderProducts(b.dataset.filter);}));
 renderProducts();saveCart();
+// SUPABASE CONNECTION
+const SUPABASE_URL = "https://wluyakaqrvvzqvfxnmps.supabase.co";
+const SUPABASE_KEY = "sb_publishable_O5kw4jqiQE7RAegQnayg2g_Zu6OpoSS";
+
+async function loadProductsFromSupabase() {
+  try {
+    const response = await fetch(
+      `${SUPABASE_URL}/rest/v1/products%20%28oz%29?select=*`,
+      {
+        headers: {
+          "apikey": SUPABASE_KEY,
+          "Authorization": `Bearer ${SUPABASE_KEY}`
+        }
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`Supabase error: ${response.status}`);
+    }
+
+    const products = await response.json();
+
+    console.log("OBZESSED products:", products);
+
+    if (products.length) {
+      PRODUCTS.length = 0;
+
+      products.forEach(product => {
+        PRODUCTS.push({
+          id: product.id,
+          name: product.name,
+          category: product.category,
+          price: Number(product.price),
+          color: product.color,
+          img: product.image_url,
+          desc: product.description
+        });
+      });
+
+      renderProducts();
+    }
+  } catch (error) {
+    console.error("Could not load OBZESSED products:", error);
+  }
+}
+
+loadProductsFromSupabase();
