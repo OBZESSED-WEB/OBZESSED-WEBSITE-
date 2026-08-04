@@ -85,3 +85,4 @@ async function loadProductsFromSupabase() {
 }
 
 loadProductsFromSupabase();
+alert("OBZESSED TEST: NEW SCRIPT LOADED");
