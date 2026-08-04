@@ -363,7 +363,7 @@
       </label>
 
       <button
-        type="submit"
+        type="button"
         class="btn"
         style="width:100%;margin-top:20px;"
       >
@@ -922,11 +922,11 @@ async function startAdmin(){
 
 
 /* LOGIN */
+
 const loginForm = document.getElementById("loginForm");
+const loginButton = loginForm.querySelector("button");
 
-loginForm.addEventListener("submit", async function(e) {
-
-  e.preventDefault();
+async function handleLogin(){
 
   const emailInput = document.getElementById("loginEmail");
   const passwordInput = document.getElementById("loginPassword");
@@ -937,41 +937,44 @@ loginForm.addEventListener("submit", async function(e) {
 
   errorBox.textContent = "";
 
-  if (!email || !password) {
+  if(!email || !password){
     errorBox.textContent = "Please enter your email and password.";
     return;
   }
 
   errorBox.textContent = "Logging in...";
+  loginButton.disabled = true;
 
-  try {
+  try{
 
-    const { data, error } =
+    const {data,error} =
       await supabaseClient.auth.signInWithPassword({
-        email: email,
-        password: password
+        email:email,
+        password:password
       });
 
-    if (error) {
-      throw error;
-    }
+    if(error) throw error;
 
-    currentUser = data.user;
+    currentUser=data.user;
 
-    document.getElementById("loginScreen").style.display = "none";
+    document.getElementById("loginScreen").style.display="none";
 
-    errorBox.textContent = "";
+    errorBox.textContent="";
 
     await loadAdminProducts();
 
-  } catch (error) {
+  }catch(error){
 
-    console.error("LOGIN ERROR:", error);
+    console.error("LOGIN ERROR:",error);
 
-    errorBox.textContent = error.message || "Login failed.";
+    errorBox.textContent=error.message || "Login failed.";
+
+  }finally{
+
+    loginButton.disabled=false;
 
   }
 
-});
+}
 
-startAdmin();
+loginButton.addEventListener("click",handleLogin);
