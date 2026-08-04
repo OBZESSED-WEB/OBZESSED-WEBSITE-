@@ -85,7 +85,7 @@ async function loadProductsFromSupabase() {
 }
 
 loadProductsFromSupabase();
-alert("OBZESSED TEST: NEW SCRIPT LOADED");
+alert("VERSION 2 TEST");");
 fetch(`${`${SUPABASE_URL}/rest/v1/products?select=*`, {
   headers: {
     apikey: SUPABASE_KEY,
