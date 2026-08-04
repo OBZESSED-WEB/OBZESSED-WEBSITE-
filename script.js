@@ -45,7 +45,7 @@ const SUPABASE_KEY = "sb_publishable_O5kw4jqiQE7RAegQnayg2g_Zu6OpoSS";
 async function loadProductsFromSupabase() {
   try {
     const response = await fetch(
-      `${SUPABASE_URL}/rest/v1/products%20%28oz%29?select=*`,
+      `${SUPABASE_URL}/rest/v1/PRODUCTS%20%28OZ%29?select=*`,
       {
         headers: {
           "apikey": SUPABASE_KEY,
