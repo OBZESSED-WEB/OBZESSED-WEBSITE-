@@ -114,6 +114,10 @@
   border:1px solid var(--line);
 }
 
+.admin-product.inactive{
+  opacity:.5;
+}
+
 .admin-product-image{
   aspect-ratio:1;
   background:#e8dccb;
@@ -139,7 +143,7 @@
 .admin-product-info p{
   color:var(--muted);
   font-size:10px;
-  margin:4px 0;
+  margin:5px 0;
 }
 
 .admin-actions{
@@ -169,6 +173,105 @@
   padding:60px;
   text-align:center;
   color:var(--muted);
+  grid-column:1/-1;
+}
+
+.admin-modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.55);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  z-index:9999;
+}
+
+.admin-modal.open{
+  display:flex;
+}
+
+.admin-form{
+  background:var(--paper);
+  width:min(650px,100%);
+  max-height:90vh;
+  overflow:auto;
+  padding:35px;
+  position:relative;
+}
+
+.admin-form h2{
+  font-family:"Cormorant Garamond",serif;
+  font-size:38px;
+  margin-top:0;
+}
+
+.admin-form label{
+  display:block;
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:.08em;
+  margin-top:15px;
+}
+
+.admin-form input,
+.admin-form textarea,
+.admin-form select{
+  width:100%;
+  box-sizing:border-box;
+  margin-top:7px;
+  padding:12px;
+  border:1px solid var(--line);
+  background:white;
+  font:inherit;
+}
+
+.admin-form textarea{
+  min-height:90px;
+  resize:vertical;
+}
+
+.form-row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:15px;
+}
+
+.form-buttons{
+  display:flex;
+  gap:10px;
+  margin-top:25px;
+}
+
+.form-buttons button{
+  flex:1;
+}
+
+.close-modal{
+  position:absolute;
+  right:18px;
+  top:15px;
+  border:0;
+  background:none;
+  font-size:28px;
+  cursor:pointer;
+}
+
+.status{
+  display:inline-block;
+  margin-top:7px;
+  padding:4px 7px;
+  font-size:8px;
+  font-weight:700;
+  letter-spacing:.08em;
+}
+
+.status.active{
+  background:#dfe9d9;
+}
+
+.status.inactive{
+  background:#ead7d7;
 }
 
 @media(max-width:850px){
@@ -191,6 +294,10 @@
   }
 
   .admin-products{
+    grid-template-columns:1fr;
+  }
+
+  .form-row{
     grid-template-columns:1fr;
   }
 }
@@ -227,13 +334,13 @@
     </div>
 
     <div class="admin-stat">
-      <span>ORDERS</span>
-      <strong>0</strong>
+      <span>ACTIVE</span>
+      <strong id="activeCount">0</strong>
     </div>
 
     <div class="admin-stat">
-      <span>SALES</span>
-      <strong>R0</strong>
+      <span>IN STOCK</span>
+      <strong id="stockCount">0</strong>
     </div>
 
   </div>
@@ -247,13 +354,15 @@
         <h2>Products</h2>
       </div>
 
-      <button class="btn" onclick="alert('Add Product coming next!')">
+      <button class="btn" onclick="openProductForm()">
         + ADD PRODUCT
       </button>
 
     </div>
 
-    <div class="admin-products" id="adminProducts"></div>
+    <div class="admin-products" id="adminProducts">
+      <div class="admin-empty">Loading products...</div>
+    </div>
 
   </section>
 
@@ -261,40 +370,231 @@
 
 </div>
 
-<script src="script.js"></script>
+
+<!-- PRODUCT FORM -->
+
+<div class="admin-modal" id="productModal">
+
+  <div class="admin-form">
+
+    <button class="close-modal" onclick="closeProductForm()">×</button>
+
+    <p class="eyebrow">INVENTORY</p>
+
+    <h2 id="formTitle">Add Product</h2>
+
+    <form id="productForm">
+
+      <input type="hidden" id="productId">
+
+      <label>
+        PRODUCT NAME
+        <input id="name" required>
+      </label>
+
+      <label>
+        DESCRIPTION
+        <textarea id="description"></textarea>
+      </label>
+
+      <div class="form-row">
+
+        <label>
+          PRICE
+          <input id="price" type="number" min="0" step="0.01" required>
+        </label>
+
+        <label>
+          CATEGORY
+          <select id="category" required>
+            <option value="jacket">Jacket</option>
+            <option value="hoodie">Hoodie</option>
+            <option value="shirt">Shirt</option>
+            <option value="pants">Pants</option>
+            <option value="accessory">Accessory</option>
+            <option value="other">Other</option>
+          </select>
+        </label>
+
+      </div>
+
+      <div class="form-row">
+
+        <label>
+          COLOUR
+          <input id="color">
+        </label>
+
+        <label>
+          STOCK
+          <input id="stock" type="number" min="0" value="0">
+        </label>
+
+      </div>
+
+      <label>
+        IMAGE URL
+        <input id="image_url" placeholder="https://...">
+      </label>
+
+      <label>
+        SIZES
+        <input id="sizes" placeholder="S, M, L, XL">
+      </label>
+
+      <label>
+        <input id="is_active" type="checkbox" checked>
+        PRODUCT IS ACTIVE
+      </label>
+
+      <div class="form-buttons">
+
+        <button type="button" class="btn ghost" onclick="closeProductForm()">
+          CANCEL
+        </button>
+
+        <button type="submit" class="btn">
+          SAVE PRODUCT
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</div>
+
+
+<script src="supabase-config.js"></script>
 
 <script>
 
-function loadAdminProducts(){
+let supabaseClient;
+let products=[];
+
+
+/* CONNECT TO SUPABASE */
+
+function connectSupabase(){
+
+  if(typeof supabase==="undefined"){
+    throw new Error("Supabase library failed to load.");
+  }
+
+  supabaseClient=supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
+
+}
+
+
+/* LOAD PRODUCTS */
+
+async function loadAdminProducts(){
 
   const container=document.getElementById("adminProducts");
 
-  document.getElementById("productCount").textContent=PRODUCTS.length;
+  container.innerHTML='<div class="admin-empty">Loading products...</div>';
 
-  container.innerHTML=PRODUCTS.map(p=>`
+  try{
 
-    <article class="admin-product">
+    const {data,error}=await supabaseClient
+      .from("products")
+      .select("*")
+      .order("created_at",{ascending:false});
+
+    if(error) throw error;
+
+    products=data||[];
+
+    document.getElementById("productCount").textContent=products.length;
+
+    document.getElementById("activeCount").textContent=
+      products.filter(p=>p.is_active).length;
+
+    document.getElementById("stockCount").textContent=
+      products.reduce((total,p)=>total+(Number(p.stock)||0),0);
+
+    renderAdminProducts();
+
+  }catch(error){
+
+    console.error(error);
+
+    container.innerHTML=`
+      <div class="admin-empty">
+        <strong>Could not load products.</strong>
+        <br><br>
+        ${error.message}
+      </div>
+    `;
+
+  }
+
+}
+
+
+/* DISPLAY PRODUCTS */
+
+function renderAdminProducts(){
+
+  const container=document.getElementById("adminProducts");
+
+  if(!products.length){
+
+    container.innerHTML=`
+      <div class="admin-empty">
+        No products yet.<br><br>
+        Click "+ ADD PRODUCT" to create your first product.
+      </div>
+    `;
+
+    return;
+
+  }
+
+  container.innerHTML=products.map(p=>`
+
+    <article class="admin-product ${p.is_active ? "" : "inactive"}">
 
       <div class="admin-product-image">
-        <img src="${p.img}" alt="${p.name}">
+
+        <img
+          src="${p.image_url || "founders-jacket.svg"}"
+          alt="${escapeHTML(p.name || "Product")}"
+          onerror="this.src='founders-jacket.svg'"
+        >
+
       </div>
 
       <div class="admin-product-info">
 
-        <h3>${p.name}</h3>
+        <h3>${escapeHTML(p.name || "Unnamed Product")}</h3>
 
-        <p>${p.color}</p>
+        <p>${escapeHTML(p.color || "")}</p>
 
-        <strong>${money(p.price)}</strong>
+        <p>${escapeHTML(p.category || "")}</p>
+
+        <strong>R${Number(p.price || 0).toLocaleString("en-ZA")}</strong>
+
+        <span class="status ${p.is_active ? "active" : "inactive"}">
+          ${p.is_active ? "ACTIVE" : "INACTIVE"}
+        </span>
 
         <div class="admin-actions">
 
-          <button onclick="alert('Product editing coming next!')">
+          <button onclick="editProduct('${p.id}')">
             EDIT
           </button>
 
-          <button onclick="alert('Photo management coming next!')">
-            PHOTO
+          <button onclick="toggleProduct('${p.id}')">
+            ${p.is_active ? "HIDE" : "SHOW"}
+          </button>
+
+          <button onclick="deleteProduct('${p.id}')">
+            DELETE
           </button>
 
         </div>
@@ -307,9 +607,223 @@ function loadAdminProducts(){
 
 }
 
-loadAdminProducts();
 
-<script src="supabase-config.js"></script>
+/* ADD / EDIT FORM */
+
+function openProductForm(product=null){
+
+  document.getElementById("productModal").classList.add("open");
+
+  document.getElementById("productForm").reset();
+
+  document.getElementById("productId").value="";
+
+  document.getElementById("is_active").checked=true;
+
+  document.getElementById("formTitle").textContent=
+    product ? "Edit Product" : "Add Product";
+
+  if(product){
+
+    document.getElementById("productId").value=product.id;
+    document.getElementById("name").value=product.name||"";
+    document.getElementById("description").value=product.description||"";
+    document.getElementById("price").value=product.price||0;
+    document.getElementById("category").value=product.category||"other";
+    document.getElementById("color").value=product.color||"";
+    document.getElementById("image_url").value=product.image_url||"";
+    document.getElementById("stock").value=product.stock||0;
+    document.getElementById("sizes").value=product.sizes||"";
+    document.getElementById("is_active").checked=product.is_active!==false;
+
+  }
+
+}
+
+
+function closeProductForm(){
+
+  document.getElementById("productModal").classList.remove("open");
+
+}
+
+
+/* EDIT */
+
+function editProduct(id){
+
+  const product=products.find(p=>String(p.id)===String(id));
+
+  if(product) openProductForm(product);
+
+}
+
+
+/* SAVE */
+
+document.getElementById("productForm").addEventListener("submit",async function(e){
+
+  e.preventDefault();
+
+  const id=document.getElementById("productId").value;
+
+  const productData={
+
+    name:document.getElementById("name").value.trim(),
+
+    description:document.getElementById("description").value.trim(),
+
+    price:Number(document.getElementById("price").value)||0,
+
+    category:document.getElementById("category").value,
+
+    color:document.getElementById("color").value.trim(),
+
+    image_url:document.getElementById("image_url").value.trim(),
+
+    stock:Number(document.getElementById("stock").value)||0,
+
+    sizes:document.getElementById("sizes").value.trim(),
+
+    is_active:document.getElementById("is_active").checked
+
+  };
+
+  try{
+
+    let result;
+
+    if(id){
+
+      result=await supabaseClient
+        .from("products")
+        .update(productData)
+        .eq("id",id);
+
+    }else{
+
+      result=await supabaseClient
+        .from("products")
+        .insert(productData);
+
+    }
+
+    if(result.error) throw result.error;
+
+    closeProductForm();
+
+    await loadAdminProducts();
+
+    alert(id ? "Product updated successfully." : "Product added successfully.");
+
+  }catch(error){
+
+    console.error(error);
+
+    alert("Could not save product:\n\n"+error.message);
+
+  }
+
+});
+
+
+/* SHOW / HIDE */
+
+async function toggleProduct(id){
+
+  const product=products.find(p=>String(p.id)===String(id));
+
+  if(!product)return;
+
+  try{
+
+    const {error}=await supabaseClient
+      .from("products")
+      .update({is_active:!product.is_active})
+      .eq("id",id);
+
+    if(error)throw error;
+
+    await loadAdminProducts();
+
+  }catch(error){
+
+    alert("Could not update product:\n\n"+error.message);
+
+  }
+
+}
+
+
+/* DELETE */
+
+async function deleteProduct(id){
+
+  const product=products.find(p=>String(p.id)===String(id));
+
+  if(!product)return;
+
+  const confirmed=confirm(
+    `Delete "${product.name}"?\n\nThis cannot be undone.`
+  );
+
+  if(!confirmed)return;
+
+  try{
+
+    const {error}=await supabaseClient
+      .from("products")
+      .delete()
+      .eq("id",id);
+
+    if(error)throw error;
+
+    await loadAdminProducts();
+
+  }catch(error){
+
+    alert("Could not delete product:\n\n"+error.message);
+
+  }
+
+}
+
+
+/* BASIC HTML SAFETY */
+
+function escapeHTML(value){
+
+  return String(value)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+
+}
+
+
+/* START */
+
+try{
+
+  connectSupabase();
+
+  loadAdminProducts();
+
+}catch(error){
+
+  console.error(error);
+
+  document.getElementById("adminProducts").innerHTML=`
+    <div class="admin-empty">
+      <strong>Supabase connection failed.</strong>
+      <br><br>
+      ${error.message}
+    </div>
+  `;
+
+}
 
 </script>
 
