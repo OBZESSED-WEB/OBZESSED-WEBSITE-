@@ -86,3 +86,16 @@ async function loadProductsFromSupabase() {
 
 loadProductsFromSupabase();
 alert("OBZESSED TEST: NEW SCRIPT LOADED");
+fetch(`${SUPABASE_URL}/rest/v1/products%20%28oz%29?select=*`, {
+  headers: {
+    apikey: SUPABASE_KEY,
+    Authorization: `Bearer ${SUPABASE_KEY}`
+  }
+})
+.then(response => response.text())
+.then(data => {
+  alert("SUPABASE RESPONSE:\n" + data);
+})
+.catch(error => {
+  alert("SUPABASE ERROR:\n" + error);
+});
